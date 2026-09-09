@@ -3,7 +3,7 @@
  * handful of published notices (including one URGENT/recent one) so the
  * public pages have real content to review during development.
  */
-import { PrismaClient, NoticeCategory } from "@prisma/client";
+import { PrismaClient, NoticeCategory, MeetingType } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -89,7 +89,68 @@ async function main() {
     });
   }
 
-  console.log(`Seeded 1 admin user and ${notices.length} notices.`);
+  const meetings: Array<{
+    title: string;
+    meetingDate: Date;
+    meetingType: MeetingType;
+    summary: string;
+  }> = [
+    {
+      title: "First Annual General Meeting (AGM) 2026 — A-Block",
+      // 30 Oct 2026, 11:00 AM
+      meetingDate: new Date(Date.UTC(2026, 9, 30, 5, 30)),
+      meetingType: MeetingType.AGM,
+      summary:
+        "First AGM of A-Block, Sector 43, Noida — annual budget review, committee elections, and resident Q&A.",
+    },
+    {
+      title: "Working Committee Meeting — Security & Gate Access Review",
+      meetingDate: new Date(Date.UTC(2026, 7, 14, 12, 0)),
+      meetingType: MeetingType.WORKING_COMMITTEE,
+      summary:
+        "Working committee review of the revised visitor gate entry procedure and CCTV upgrade rollout.",
+    },
+    {
+      title: "Emergency General Meeting — Water Supply Contingency",
+      meetingDate: new Date(Date.UTC(2026, 8, 5, 11, 0)),
+      meetingType: MeetingType.EGM,
+      summary:
+        "EGM called to approve emergency tanker arrangements during the Noida Authority pipeline maintenance window.",
+    },
+    {
+      title: "General Meeting — Diwali Celebration Planning",
+      meetingDate: new Date(Date.UTC(2025, 10, 2, 18, 0)),
+      meetingType: MeetingType.GENERAL_MEETING,
+      summary:
+        "Resident meeting to plan the community Diwali celebration, budget, and volunteer sign-up.",
+    },
+  ];
+
+  // Placeholder PDF for local/demo use only — not the actual signed minutes
+  // of any real meeting. Replace via the (future) admin upload flow.
+  const dummyFileUrl = "/documents/mom/2026-10-30-first-agm-a-block.pdf";
+
+  for (const meeting of meetings) {
+    const existing = await prisma.meetingMinute.findFirst({
+      where: { title: meeting.title, meetingDate: meeting.meetingDate },
+    });
+    if (existing) continue;
+
+    await prisma.meetingMinute.create({
+      data: {
+        title: meeting.title,
+        meetingDate: meeting.meetingDate,
+        meetingType: meeting.meetingType,
+        summary: meeting.summary,
+        fileUrl: dummyFileUrl,
+        authorId: admin.id,
+      },
+    });
+  }
+
+  console.log(
+    `Seeded 1 admin user, ${notices.length} notices, and ${meetings.length} meeting minutes.`,
+  );
 }
 
 main()

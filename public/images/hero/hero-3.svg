@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g3)"/>
+  <text x="50%" y="46%" text-anchor="middle" font-family="system-ui, sans-serif" font-size="56" fill="#ffffff" opacity="0.9">Sector 43 — Clubhouse &amp; Amenities</text>
+  <text x="50%" y="56%" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" fill="#fef3c7">Placeholder — replace with a real photo (same filename)</text>
+</svg>

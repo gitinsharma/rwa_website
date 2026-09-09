@@ -74,19 +74,27 @@ enum NoticeCategory {
 }
 
 model MeetingMinute {
-  id          String    @id @default(uuid())
-  meetingDate DateTime  @db.Date
+  id          String      @id @default(uuid())
+  meetingDate DateTime    @db.Date
+  meetingType MeetingType @default(GENERAL_MEETING)
   title       String
-  summary     String?   @db.Text
-  fileUrl     String    // S3 object key or public URL
+  summary     String?     @db.Text
+  fileUrl     String      // S3 object key or public URL
   
   authorId    String
-  author      AdminUser @relation(fields: [authorId], references: [id])
+  author      AdminUser   @relation(fields: [authorId], references: [id])
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
   @@index([meetingDate(sort: Desc)])
+}
+
+enum MeetingType {
+  AGM                 // Annual General Meeting
+  EGM                 // Emergency/Extraordinary General Meeting
+  WORKING_COMMITTEE   // Working/managing committee meeting
+  GENERAL_MEETING     // Any other regular resident meeting
 }
 
 model Document {
@@ -134,6 +142,33 @@ enum LetterStatus {
 }
 
 ```
+
+## 2b. Membership & Dues (not yet a DB model — static for now)
+
+`/membership`'s data currently lives in `src/lib/membership.ts` as a plain TypeScript array, not in Postgres — see `02-information-architecture.md` §F for why (no real data existed yet when built, and no admin auth exists to gate edits behind, so a Prisma model + CRUD screen would add ceremony without adding safety). The shape it would take if/when it moves into Postgres:
+
+```prisma
+model MembershipRecord {
+  houseNumber       String   @id // natural key, not a generated uuid
+  ownerName         String
+
+  registrationPaid  Boolean  @default(false)
+  registrationAmount Int?
+  registrationDate  DateTime? @db.Date
+
+  developmentPaid   Boolean  @default(false)
+  developmentAmount Int?
+  developmentDate   DateTime? @db.Date
+
+  securityPaid      Boolean  @default(false)
+  securityAmount    Int?
+  securityDate      DateTime? @db.Date
+
+  updatedAt         DateTime @updatedAt
+}
+```
+
+Deliberately no payment-mode/reference-number field — see the privacy note in `02-information-architecture.md` §F.
 
 ## 3. Storage Key Strategy
 

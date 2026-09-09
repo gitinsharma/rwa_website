@@ -13,6 +13,7 @@ The application is divided into two strict routing zones: the Public UI (accessi
 * `/meetings` (MOM archive)
 * `/documents` (General RWA documents, bylaws)
 * `/authority` (Official correspondence)
+* `/membership` (Per-house membership fee transparency — registration, development fund, security charges — and total funds collected)
 * `/about` (RWA directory & contact info)
 
 ### Admin Routes (Protected)
@@ -36,7 +37,7 @@ The application is divided into two strict routing zones: the Public UI (accessi
 
 ### Public Layout (`app/(public)/layout.tsx`)
 
-* **Header:** Sticky navigation bar containing the RWA Logo, primary navigation links (`Notices`, `Meetings`, `Documents`, `Authority`), and a mobile hamburger menu.
+* **Header:** Sticky navigation bar containing the RWA Logo, primary navigation links (`Notices`, `Meetings`, `Documents`, `Authority`, `Membership`, `About`), and a mobile hamburger menu.
 * **Footer:** Essential links, copyright, official RWA email, and a disclaimer that the site is for informational purposes.
 
 ### Admin Layout (`app/(adminrwa)/layout.tsx`)
@@ -72,13 +73,27 @@ The application is divided into two strict routing zones: the Public UI (accessi
 
 ### D. Meeting Minutes (`/meetings`)
 
-* **Timeline View:** Grouped by year and month.
-* **MOM Item:** Displays the meeting date, a summary of key agenda items, and a prominent "Download PDF" button for the official minutes.
+* **Timeline View:** Grouped by year (month-level grouping deferred — low volume in V1 makes year sections sufficient; revisit once a sector has multiple meetings per month).
+* **Meeting Type:** Each meeting is tagged with a type — `AGM` (Annual General Meeting), `EGM` (Emergency/Extraordinary General Meeting), `WORKING_COMMITTEE`, or `GENERAL_MEETING` (`MeetingType` enum, `04-data-model.md`) — shown as a colored pill (`src/lib/meeting-type.ts`) next to the date.
+* **MOM Item:** Uses the shared `DownloadRow` component — meeting title, date, type pill, and a prominent "Download PDF" button for the official minutes.
+* **File storage note:** PDFs are currently served as static files from `public/documents/mom/` (plain URL paths in `fileUrl`), not yet through MinIO/S3 presigned URLs — that wiring lands with the admin upload flow (`09-file-document-management.md`); the `fileUrl` field's contract ("S3 object key or public URL") already accommodates both.
 
 ### E. About & Directory (`/about`)
 
-* **Board Members:** A grid showing current RWA committee members, their roles (President, Secretary, Treasurer), and official contact emails.
-* **Contact Info:** Sector 43 RWA registered address and general inquiry email.
+* **Board Members:** A grid showing current RWA committee members, their roles (President, Secretary, Treasurer), tap-to-call phone numbers, and residence address. Implemented as static data (`src/lib/contacts.ts`) rather than a DB model — office-bearer turnover is infrequent enough (annual/biennial elections) that editing this file directly is an acceptable update path for V1; revisit if churn increases.
+* **Security Contacts:** Day/night security in-charge names and tap-to-call numbers — added beyond the original spec since residents are more likely to need these for day-to-day issues than the board's numbers.
+* **Contact Info:** General inquiry email (currently `rwa43Noida@gmail.com`, sourced from the same `contacts.ts`). No separate registered address is published yet — only committee members' individual addresses.
+
+### F. Membership & Dues (`/membership`)
+
+Added post-launch in response to resident feedback requesting fee-payment transparency (some residents have paid registration/development/security fees, some haven't, and the RWA wants that visible rather than disputed informally).
+
+* **House-keyed table:** One row per house (house number is the natural key — no separate resident-ID system exists). Columns: House No., Owner, Registration Fee, Development Fund (₹15,000 one-time), Security Charges (₹10,000 one-time).
+* **Paid/Not-Paid styling:** Green with amount + date when paid; red "Not Paid" when not — deliberately blunt, since the point is visible accountability. See `src/components/public/FeeStatusCell.tsx`.
+* **Running total:** Sum of all amounts actually recorded as paid, displayed prominently ("Total funds collected to date") so the RWA and residents can both see aggregate finances, not just individual status.
+* **Mobile-first layout:** A wide 5-column table doesn't work on a phone (see `05-public-ui.md`'s mobile-first principle) — renders as one card per house below the `sm` breakpoint, a real `<table>` above it, sharing the same `FeeStatusCell` so the two never disagree.
+* **Data source & privacy note:** Static data (`src/lib/membership.ts`), empty by default — no real resident data existed at the time this was built, and fabricated names/addresses were deliberately not used to avoid ever looking like real data. The RWA adds real per-house records directly to that file (format documented inline) as fees are collected. Payment mode/reference numbers are intentionally *not* a field — only amount and date — to avoid publishing bank/UPI reference numbers alongside personal financial status. Like Meetings, this is the strongest candidate for a future admin-managed DB table once admin auth exists, since it changes with every payment.
+* **Quick Actions entry point:** A Home page tile ("Membership & Dues") alongside Meeting Minutes/Contact/All Notices. The "Bylaws & Forms" tile (→ `/documents`) is commented out in `src/app/(public)/page.tsx` for now, not deleted — `/documents` has no real content yet, so 4 tiles are shown rather than one leading nowhere; re-enable once Documents is built.
 
 ---
 
