@@ -1,0 +1,14 @@
+{
+	email {$ACME_EMAIL}
+}
+
+# Public site — proxied to the Next.js app.
+{$DOMAIN} {
+	reverse_proxy web:3000
+}
+
+# Public file downloads — served directly from MinIO, bypassing Next.js
+# entirely (per 09-file-document-management.md).
+{$FILES_DOMAIN} {
+	reverse_proxy storage:9000
+}
