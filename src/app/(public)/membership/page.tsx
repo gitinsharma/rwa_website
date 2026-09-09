@@ -22,7 +22,7 @@ export default function MembershipPage() {
       <p className="mt-1 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
         A transparent record of RWA fees per house — registration fee,
         one-time development fund ({formatRupees(DEVELOPMENT_FUND_AMOUNT)}),
-        and security charges ({formatRupees(SECURITY_CHARGES_AMOUNT)}).
+        and annual security charges ({formatRupees(SECURITY_CHARGES_AMOUNT)}).
         Search by house number or name below.
       </p>
 

@@ -27,10 +27,18 @@ export type MembershipRecord = {
   securityCharges: FeePayment;
 };
 
-// Standard one-time amounts, shown as page-level context regardless of what
-// any individual record's `amount` says (a record's own `amount` is the
-// actual amount received, in case of partial/adjusted payments — none
-// recorded yet, see PENDING note below).
+// Standard amounts, shown as page-level context regardless of what any
+// individual record's `amount` says (a record's own `amount` is the actual
+// amount received, in case of partial/adjusted payments — none recorded
+// yet, see PENDING note below).
+//
+// Per the RWA's own notice (notice_sample.md): development fund is a
+// ONE-TIME ₹15,000; security charge is ₹10,000 ANNUAL ("वार्षिक").
+//
+// KNOWN MODELLING GAP: an annual fee doesn't fit a single paid/unpaid
+// boolean — it needs a year dimension (paid for 2026? 2027?). Today's shape
+// effectively tracks "has paid the current cycle". Revisit before a second
+// year's collection begins. See 15-implementation-status.md.
 export const DEVELOPMENT_FUND_AMOUNT = 15000;
 export const SECURITY_CHARGES_AMOUNT = 10000;
 

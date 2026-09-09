@@ -89,7 +89,9 @@ Approximately 5,000 visitors/day. Optimize for simplicity, correctness, security
 
 ## Project workflow
 
-Technical specifications live under `docs/`. Each specification should be implementation-oriented and versioned.
+Technical specifications live at the repo root (the `docs/` layout referenced below was never adopted — files sit alongside this one). Each specification is implementation-oriented and is **kept in sync with what's actually built**: when a decision changes during implementation, the spec is edited to record the new decision and the reasoning, including things deliberately not done.
+
+Start with `CLAUDE.md` for orientation, then:
 
 Recommended order:
 
@@ -108,4 +110,9 @@ Recommended order:
 13. `13-testing.md`
 14. `14-deployment-and-operations.md`
 
-Claude should read `project.md` and all relevant specifications before implementing a feature.
+Plus two living operational documents, added once implementation was underway:
+
+15. `15-implementation-status.md` — what is actually built vs. specced; update it whenever a feature lands
+16. `16-local-development.md` — local setup and diagnosed failure modes
+
+Claude should read `CLAUDE.md`, `project.md`, and all relevant specifications before implementing a feature.
