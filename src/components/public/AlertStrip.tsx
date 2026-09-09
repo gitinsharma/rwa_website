@@ -49,7 +49,7 @@ export function AlertStrip({ notice }: AlertStripProps) {
           type="button"
           onClick={handleDismiss}
           aria-label="Dismiss alert"
-          className="shrink-0 rounded p-1 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>

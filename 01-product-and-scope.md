@@ -21,6 +21,7 @@ Meeting Minutes (MOM) Archive: Searchable repository of past RWA meetings with a
 Document Library: Centralized access to RWA bylaws, registration forms, and compliance documents.
 Authority Correspondence: Dedicated section tracking official letters and representations sent to or received from the Noida Authority and other civic bodies.
 RWA Directory: Static listing of current board members and official contact information.
+Membership & Dues Transparency: Per-house, publicly viewable record of which one-time fees (registration, development fund, security charges) have been paid, with amount/date when paid, plus a running total of funds collected. This is a manually-maintained transparency record, not a payment gateway — see §6, it does not process or collect payments itself.
 Global Search: Full-text search across notice titles, document descriptions, and meeting summaries using PostgreSQL.
 4. Content Lifecycle & Data Workflows
 Phase
@@ -49,7 +50,7 @@ Security: Admin routes strictly protected via Auth.js; database queries paramete
 SEO & Discoverability: Standard meta tags and semantic HTML to ensure public notices and general RWA information index correctly.
 6. Explicitly Out of Scope (V1)
 Resident user accounts or login functionality.
-Payment gateways for maintenance dues or subscriptions.
+Payment gateways for maintenance dues or subscriptions — Membership & Dues Transparency (above) publishes payment *status* recorded manually by the RWA, it does not collect, process, or verify payments itself.
 Complaint ticketing and helpdesk systems.
 Interactive polls, forums, or voting mechanisms.
 Automated push notifications, WhatsApp integration, or SMS alerts.

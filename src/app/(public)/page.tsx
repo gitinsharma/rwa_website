@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { FileText, Landmark, Megaphone, Phone } from "lucide-react";
+import { Landmark, Megaphone, Phone, Users } from "lucide-react";
+// FileText was for the commented-out "Bylaws & Forms" tile below — re-import
+// when that's re-added.
 import { AlertStrip } from "@/components/public/AlertStrip";
+import { HeroCarousel } from "@/components/public/HeroCarousel";
 import { NoticeCard } from "@/components/public/NoticeCard";
 import { EmptyState } from "@/components/public/EmptyState";
 import { getActiveUrgentNotice, getRecentNotices } from "@/lib/notices";
@@ -8,10 +11,34 @@ import { getActiveUrgentNotice, getRecentNotices } from "@/lib/notices";
 // Home page uses the root layout's default title/description as-is
 // (see src/app/layout.tsx) rather than redeclaring them here.
 
+// See public/images/hero/README.md for the filename convention and how to
+// swap these placeholders for real photos.
+//
+// TEMPORARY — local testing only. Points at gitignored `test-*` files (see
+// .gitignore) so this never gets committed/deployed. Two of the three test
+// images are not cleared for publishing (real-estate marketing watermark,
+// political party branding — see chat history). Swap this back to the
+// hero-*.svg / real-photo array below before committing.
+const HERO_IMAGES = [
+  { src: "/images/hero/test-noida.jpg", alt: "[TEST ONLY] Welcome to Noida gate" },
+  { src: "/images/hero/test-sector43-layout.png", alt: "[TEST ONLY] Sector 43 layout map — not cleared for publishing" },
+  { src: "/images/hero/test-yogi.jpg", alt: "[TEST ONLY] Political greeting graphic — not cleared for publishing" },
+];
+
+// const HERO_IMAGES = [
+//   { src: "/images/hero/hero-1.svg", alt: "Sector 43 main gate" },
+//   { src: "/images/hero/hero-2.svg", alt: "Sector 43 community park" },
+//   { src: "/images/hero/hero-3.svg", alt: "Sector 43 clubhouse and amenities" },
+//   { src: "/images/hero/hero-4.svg", alt: "Sector 43 neighbourhood streets" },
+// ];
+
 const QUICK_ACTIONS = [
   { href: "/meetings", label: "Meeting Minutes", icon: Landmark },
-  { href: "/documents", label: "Bylaws & Forms", icon: FileText },
+  // Commented out for now — /documents has no real content yet. Re-add
+  // once the Documents section (bylaws/forms) is actually built.
+  // { href: "/documents", label: "Bylaws & Forms", icon: FileText },
   { href: "/about", label: "Contact", icon: Phone },
+  { href: "/membership", label: "Membership & Dues", icon: Users },
   { href: "/notices", label: "All Notices", icon: Megaphone },
 ];
 
@@ -26,21 +53,25 @@ export default async function HomePage() {
       <AlertStrip notice={urgentNotice} />
 
       {/* Hero */}
-      <section className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
-        <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-100">
-            Sector 43 RWA
-          </h1>
-          <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
-            The official information hub for Sector 43, Noida — notices,
-            meeting minutes, RWA documents, and correspondence with civic
-            authorities, all in one place for residents.
-          </p>
+      <section className="relative border-b border-slate-200 dark:border-slate-800">
+        <HeroCarousel images={HERO_IMAGES} />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 px-4 pb-6 sm:px-6 sm:pb-10">
+          <div className="mx-auto max-w-5xl">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-4xl">
+              Sector 43 RWA
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-white/90 sm:mt-3 sm:text-base">
+              The official information hub for Sector 43, Noida — notices,
+              meeting minutes, RWA documents, and correspondence with civic
+              authorities, all in one place for residents.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Quick Actions */}
-      <section className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+      <section className="mx-auto max-w-5xl px-4 py-8 sm:py-10 sm:px-6">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {QUICK_ACTIONS.map(({ href, label, icon: Icon }) => (
             <Link

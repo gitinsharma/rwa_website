@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { GENERAL_INQUIRY_EMAIL } from "@/lib/contacts";
 
 const FOOTER_LINKS = [
   { href: "/notices", label: "Notices" },
   { href: "/meetings", label: "Meeting Minutes" },
   { href: "/documents", label: "Documents" },
   { href: "/authority", label: "Authority Correspondence" },
+  { href: "/membership", label: "Membership & Dues" },
   { href: "/about", label: "About & Contact" },
 ];
 
@@ -28,10 +30,10 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Sector 43 Residents Welfare
             Association, Noida. Official inquiries:{" "}
             <a
-              href="mailto:info@sector43rwa.in"
+              href={`mailto:${GENERAL_INQUIRY_EMAIL}`}
               className="hover:text-blue-600 dark:hover:text-blue-400"
             >
-              info@sector43rwa.in
+              {GENERAL_INQUIRY_EMAIL}
             </a>
           </p>
           <p>
